@@ -8,7 +8,8 @@ import 'package:flame_space_shooter/components/enemy.dart';
 import 'package:flame_space_shooter/components/player.dart';
 import 'package:flutter/painting.dart';
 
-class SpaceShooterPage extends FlameGame with PanDetector {
+class SpaceShooterPage extends FlameGame
+    with PanDetector, HasCollisionDetection {
   late Player player;
 
   @override
@@ -19,7 +20,6 @@ class SpaceShooterPage extends FlameGame with PanDetector {
         ParallaxImageData('rain.png'),
         ParallaxImageData('rain.png'),
       ],
-      // scale: Vector2(0.1, 0.1),
       baseVelocity: Vector2(0, -5),
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(0, 5),
