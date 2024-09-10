@@ -24,5 +24,7 @@ class Explosion extends SpriteAnimationComponent
         loop: false,
       ),
     );
+
+    game.score += 1;
   }
 }

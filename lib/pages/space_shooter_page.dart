@@ -1,16 +1,22 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
+import 'package:flame/layout.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_space_shooter/components/enemy.dart';
 import 'package:flame_space_shooter/components/player.dart';
+import 'package:flame_space_shooter/components/score.dart';
+import 'package:flame_space_shooter/components/watermark.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/painting.dart';
 
 class SpaceShooterPage extends FlameGame
     with PanDetector, HasCollisionDetection {
   late Player player;
+  int score = 0;
 
   @override
   Future<void> onLoad() async {
@@ -24,6 +30,7 @@ class SpaceShooterPage extends FlameGame
       repeat: ImageRepeat.repeat,
       velocityMultiplierDelta: Vector2(0, 5),
     );
+    add(AlignComponent(alignment: Anchor.bottomCenter, child: Watermark()));
     add(parallax);
 
     player = Player();
@@ -36,6 +43,13 @@ class SpaceShooterPage extends FlameGame
         },
         period: 1,
         area: Rectangle.fromLTWH(0, 0, size.x, -Enemy.enemySize),
+      ),
+    );
+
+    add(
+      AlignComponent(
+        alignment: Anchor.topRight,
+        child: Score(),
       ),
     );
   }
