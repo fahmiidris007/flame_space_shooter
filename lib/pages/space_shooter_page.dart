@@ -7,16 +7,20 @@ import 'package:flame/game.dart';
 import 'package:flame/layout.dart';
 import 'package:flame/parallax.dart';
 import 'package:flame_space_shooter/components/enemy.dart';
+import 'package:flame_space_shooter/components/lives.dart';
 import 'package:flame_space_shooter/components/player.dart';
 import 'package:flame_space_shooter/components/score.dart';
 import 'package:flame_space_shooter/components/watermark.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 class SpaceShooterPage extends FlameGame
     with PanDetector, HasCollisionDetection {
   late Player player;
-  int score = 0;
+  int scores = 0;
+  int lives = 3;
+  bool isGameOver = false;
 
   @override
   Future<void> onLoad() async {
@@ -52,6 +56,22 @@ class SpaceShooterPage extends FlameGame
         child: Score(),
       ),
     );
+
+    add(AlignComponent(alignment: Anchor.topLeft, child: Live()));
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+    isGameOver == true
+        ? add(
+            AlignComponent(
+                alignment: Anchor.center,
+                child: TextComponent(
+                  text: 'Game Over',
+                )),
+          )
+        : null;
   }
 
   @override
@@ -67,5 +87,13 @@ class SpaceShooterPage extends FlameGame
   @override
   void onPanEnd(DragEndInfo info) {
     player.stopShooting();
+  }
+
+  void gameOver() {
+    isGameOver = true;
+    // pauseEngine();
+    Future.delayed(const Duration(seconds: 1), () {
+      pauseEngine();
+    });
   }
 }

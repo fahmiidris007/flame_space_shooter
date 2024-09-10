@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_space_shooter/components/bullets.dart';
+import 'package:flame_space_shooter/components/enemy.dart';
+import 'package:flame_space_shooter/components/explosion.dart';
 import 'package:flame_space_shooter/pages/space_shooter_page.dart';
 
 class Player extends SpriteAnimationComponent
-    with HasGameRef<SpaceShooterPage> {
+    with HasGameRef<SpaceShooterPage>, CollisionCallbacks {
   Player()
       : super(
           size: Vector2(100, 150),
@@ -27,6 +30,8 @@ class Player extends SpriteAnimationComponent
     );
 
     position = game.size / 2;
+
+    add(RectangleHitbox());
 
     _bulletSpawner = SpawnComponent(
       period: .2,
@@ -56,5 +61,19 @@ class Player extends SpriteAnimationComponent
 
   void stopShooting() {
     _bulletSpawner.timer.stop();
+  }
+
+  @override
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (other is Enemy) {
+      other.removeFromParent();
+      game.add(Explosion(position: position));
+      if (game.lives != 0) {
+        game.lives -= 1;
+      }
+    }
   }
 }
